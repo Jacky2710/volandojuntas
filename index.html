@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volando Juntas · Sororidad</title>
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET Y VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b0719;
+            --text: #f5e9ff;
+            --primary: #ff6b9d;
+            --secondary: #c084fc;
+            --accent: #fb923c;
+            --glass: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+      
+        .cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follow {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 998;
+            transition: all 0.15s ease-out;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(2px);
+        }
+
+     
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== CONTENIDO ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* ===== SECCIÓN HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 15vw, 7rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+            text-shadow: 0 0 80px rgba(255, 107, 157, 0.3);
+            animation: pulso 3s ease-in-out infinite;
+        }
+
+        @keyframes pulso {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.8;
+            max-width: 600px;
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: maquina 3s steps(40) 1s forwards;
+            width: 0;
+        }
+
+        @keyframes maquina {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .btn {
+            padding: 1rem 2.8rem;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 107, 157, 0.6);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            opacity: 0;
+            transition: 0.5s;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+
+        /* ===== SECCIÓN PREGUNTA ===== */
+        .pregunta-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            padding: 4rem 0;
+        }
+
+        .pregunta-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: 0.5s;
+        }
+
+        .pregunta-box:hover {
+            transform: scale(1.01);
+            border-color: var(--secondary);
+        }
+
+        .pregunta-box h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pregunta-box p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-top: 1.5rem;
+            line-height: 1.8;
+            -webkit-text-fill-color: #e2d5f5;
+        }
+
+        /* ===== MURO DE RESPUESTAS ===== */
+        .muro {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            perspective: 800px;
+            text-align: center;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-20px) rotateY(8deg) rotateX(4deg);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(255, 107, 157, 0.2);
+        }
+
+        .card .emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-top: 0.8rem;
+        }
+
+        /* ===== FORMULARIO ===== */
+        .form-sororidad {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 3rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .form-sororidad input, .form-sororidad textarea {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .form-sororidad input:focus, .form-sororidad textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.2);
+        }
+
+        .form-sororidad button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+
+        .form-sororidad button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px var(--secondary);
+        }
+
+        /* ===== VIDEO ===== */
+        .video-wrapper {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 800px;
+            margin: 4rem auto;
+            box-shadow: var(--shadow);
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 24px;
+            border: none;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 4rem;
+        }
+
+        .frase-cambia {
+            font-size: 1.5rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--secondary);
+            min-height: 4rem;
+            transition: opacity 0.5s;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 3.5rem; }
+            .pregunta-box h2 { font-size: 1.8rem; }
+            .pregunta-box p { font-size: 1rem; }
+            .cursor, .cursor-follow { display: none; }
+            body { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follow" id="cursorFollow"></div>
+
+    
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+
+        
+        <section class="hero">
+            <h1>VOLANDO JUNTAS</h1>
+            <div class="subtitle">✨ Donde la sororidad es nuestro motor ✨</div>
+            <button class="btn" id="btnConfeti">🦋 Despega con nosotras</button>
+        </section>
+
+        
+        <section class="pregunta-section">
+            <div class="pregunta-box">
+                <h2>¿Qué significa para mí ejercer la sororidad en un mundo competitivo y desigual?</h2>
+                <p>
+                    <strong>Respuesta:</strong> Significa <span style="color: var(--primary);">romper el espejo</span> donde la competencia nos hace enemigas, y construir un <span style="color: var(--accent);">ecosistema de alas</span>. 
+                    Es saber que el éxito de una nos eleva a todas. En un mundo que nos empuja a pisar para subir, la sororidad es el acto radical de <span style="color: var(--secondary);">tender la mano</span>, celebrar los logros ajenos como propios, y recordar que <strong>juntas volamos más alto y más lejos</strong>. 
+                    No es ignorar la desigualdad, sino <span style="color: #fbbf24;">usarla como impulso</span> para crear redes de apoyo que desafíen el sistema.
+                </p>
+            </div>
+
+            
+            <h2 style="margin-top: 3rem; font-weight: 300;">🌷 Voces que inspiran</h2>
+            <div class="muro" id="muroRespuestas">
+                <div class="card"><span class="emoji">🤝</span><h3>Ana</h3><p>"La sororidad es mi ancla en la tormenta."</p></div>
+                <div class="card"><span class="emoji">🌟</span><h3>María</h3><p>"No compito, comparto. Esa es mi revolución."</p></div>
+                <div class="card"><span class="emoji">💪</span><h3>Laura</h3><p>"La desigualdad se combate con alianzas, no con soledad."</p></div>
+            </div>
+
+            
+            <div class="form-sororidad">
+                <h3 style="margin-bottom: 1rem;">💬 Deja tu huella</h3>
+                <input type="text" id="nombreInput" placeholder="Tu nombre">
+                <textarea id="respuestaInput" rows="3" placeholder="¿Qué significa la sororidad para ti?"></textarea>
+                <button id="btnAgregarRespuesta">Agregar al muro ✨</button>
+            </div>
+        </section>
+
+        
+        <section id="video">
+            <div class="video-wrapper">
+                <h2 style="text-align:center; margin-bottom: 1.5rem; font-weight:300;">🎬 Nuestra historia en movimiento</h2>
+    
+                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video VolandoJuntas" allowfullscreen></iframe>
+                
+            </div>
+        </section>
+
+        
+        <footer>
+            <div class="frase-cambia" id="fraseDinamica">"Juntas somos un huracán de luz."</div>
+            <p style="margin-top: 2rem; opacity: 0.4; font-size: 0.8rem;">VolandoJuntas · BECALAS · 2026</p>
+        </footer>
+
+    </div>
+
+    <script>
+        
+        const cursor = document.getElementById('cursor');
+        const cursorFollow = document.getElementById('cursorFollow');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorFollow.style.left = e.clientX + 'px';
+            cursorFollow.style.top = e.clientY + 'px';
+        });
+
+
+        
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.color = `hsla(${Math.random() * 60 + 300}, 80%, 70%, 0.7)`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > width) this.speedX *= -1;
+                if (this.y < 0 || this.y > height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles(count = 120) {
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        let mouseX = null, mouseY = null;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    let maxDist = 140;
+                    
+                    if (mouseX !== null) {
+                        const dMouseA = Math.hypot(particles[a].x - mouseX, particles[a].y - mouseY);
+                        const dMouseB = Math.hypot(particles[b].x - mouseX, particles[b].y - mouseY);
+                        if (dMouseA < 120 || dMouseB < 120) maxDist = 250;
+                    }
+                    if (dist < maxDist) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        const opacity = 1 - (dist / maxDist);
+                        ctx.strokeStyle = `rgba(192, 132, 252, ${opacity * 0.4})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+       
+        document.getElementById('btnConfeti').addEventListener('click', function() {
+            for (let i = 0; i < 100; i++) {
+                const confeti = document.createElement('div');
+                confeti.style.position = 'fixed';
+                confeti.style.width = '10px';
+                confeti.style.height = '10px';
+                confeti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                confeti.style.left = Math.random() * window.innerWidth + 'px';
+                confeti.style.top = '-20px';
+                confeti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confeti.style.pointerEvents = 'none';
+                confeti.style.zIndex = '9999';
+                confeti.style.transition = `all ${Math.random() * 2 + 1}s cubic-bezier(0.2, 0.8, 0.3, 1)`;
+                document.body.appendChild(confeti);
+                setTimeout(() => {
+                    confeti.style.transform = `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 720}deg)`;
+                    confeti.style.opacity = '0';
+                }, 50);
+                setTimeout(() => confeti.remove(), 3000);
+            }
+        });
+
+        
+        const muro = document.getElementById('muroRespuestas');
+        const nombreInput = document.getElementById('nombreInput');
+        const respuestaInput = document.getElementById('respuestaInput');
+        const btnAgregar = document.getElementById('btnAgregarRespuesta');
+
+        function cargarRespuestas() {
+            const guardadas = JSON.parse(localStorage.getItem('respuestasSororidad')) || [];
+            guardadas.forEach(item => {
+                agregarCard(item.nombre, item.respuesta, false);
+            });
+        }
+
+        function agregarCard(nombre, respuesta, guardar = true) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <span class="emoji">🦋</span>
+                <h3>${nombre}</h3>
+                <p>"${respuesta}"</p>
+            `;
+            muro.appendChild(card);
+
+            if (guardar) {
+                const guardadas = JSON.parse(localStorage.getItem('respuestasSororidad')) || [];
+                guardadas.push({ nombre, respuesta });
+                localStorage.setItem('respuestasSororidad', JSON.stringify(guardadas));
+            }
+        }
+
+        btnAgregar.addEventListener('click', () => {
+            const nombre = nombreInput.value.trim() || 'Anónima';
+            const respuesta = respuestaInput.value.trim();
+            if (respuesta === '') {
+                alert('Escribe algo bonito ✨');
+                return;
+            }
+            agregarCard(nombre, respuesta, true);
+            nombreInput.value = '';
+            respuestaInput.value = '';
+        
+            document.querySelector('.form-sororidad').style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                document.querySelector('.form-sororidad').style.transform = 'scale(1)';
+            }, 150);
+        });
+
+        cargarRespuestas();
+
+      
+        const frases = [
+            "Juntas somos un huracán de luz.",
+            "La sororidad es el único camino hacia la libertad.",
+            "Cuando una avanza, todas avanzamos.",
+            "No hay techo que no podamos romper volando juntas.",
+            "El futuro es femenino y colectivo."
+        ];
+        let idx = 0;
+        const fraseEl = document.getElementById('fraseDinamica');
+        setInterval(() => {
+            idx = (idx + 1) % frases.length;
+            fraseEl.style.opacity = '0';
+            setTimeout(() => {
+                fraseEl.textContent = frases[idx];
+                fraseEl.style.opacity = '1';
+            }, 300);
+        }, 4000);
+
+        
+        
+        const cards = document.querySelectorAll('.card, .pregunta-box, .video-wrapper');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        cards.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.2, 0.9, 0.3, 1)';
+            observer.observe(el);
+        });
+
+        console.log('🦋 VolandoJuntas · Hecho con mucho amor y código 💜');
+    </script>
+</body>
+</html>
