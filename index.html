@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volando Juntas · Sororidad</title>
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
@@ -24,6 +23,7 @@
             --accent: #fb923c;
             --glass: rgba(255, 255, 255, 0.08);
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            --sidebar-width: 240px;
         }
 
         body {
@@ -32,9 +32,11 @@
             color: var(--text);
             overflow-x: hidden;
             cursor: none;
+            display: flex;
+            min-height: 100vh;
         }
 
-      
+        /* ===== CURSOR ===== */
         .cursor {
             width: 20px;
             height: 20px;
@@ -44,7 +46,6 @@
             pointer-events: none;
             z-index: 999;
             mix-blend-mode: difference;
-            transition: transform 0.1s;
             transform: translate(-50%, -50%);
         }
 
@@ -61,7 +62,7 @@
             backdrop-filter: blur(2px);
         }
 
-     
+        /* ===== PARTICULAS ===== */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -72,18 +73,138 @@
             pointer-events: none;
         }
 
-        /* ===== CONTENIDO ===== */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(11, 7, 25, 0.85);
+            backdrop-filter: blur(25px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ===== SECCIÓN HERO ===== */
-        .hero {
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 0.5rem 0.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .sidebar .logo small {
+            font-size: 0.7rem;
+            display: block;
+            -webkit-text-fill-color: rgba(255,255,255,0.4);
+            font-weight: 300;
+            letter-spacing: 4px;
+        }
+
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid transparent;
+        }
+
+        .sidebar a:hover {
+            background: var(--glass);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .sidebar a.activo {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(192, 132, 252, 0.2));
+            color: var(--primary);
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+
+        .sidebar a .icono {
+            font-size: 1.3rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        /* ===== BOTÓN HAMBURGUESA (mobile) ===== */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: rgba(11, 7, 25, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 0.8rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        .hamburger:hover {
+            background: var(--glass);
+        }
+
+        /* ===== CONTENIDO PRINCIPAL ===== */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem 2rem 2rem 3rem;
+            position: relative;
+            z-index: 1;
             min-height: 100vh;
+        }
+
+        /* ===== PÁGINAS ===== */
+        .pagina {
+            display: none;
+            animation: fadeSlide 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pagina.activa {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pagina-titulo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== HERO (página inicio) ===== */
+        .hero {
+            min-height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -93,7 +214,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 15vw, 7rem);
+            font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
             -webkit-background-clip: text;
@@ -110,20 +231,10 @@
         }
 
         .hero .subtitle {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 300;
             opacity: 0.8;
-            max-width: 600px;
-            border-right: 3px solid var(--primary);
-            white-space: nowrap;
-            overflow: hidden;
-            animation: maquina 3s steps(40) 1s forwards;
-            width: 0;
-        }
-
-        @keyframes maquina {
-            from { width: 0; }
-            to { width: 100%; }
+            max-width: 500px;
         }
 
         .btn {
@@ -137,9 +248,6 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
-            margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:hover {
@@ -147,274 +255,543 @@
             box-shadow: 0 0 60px rgba(255, 107, 157, 0.6);
         }
 
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
-            opacity: 0;
-            transition: 0.5s;
-        }
-
-        .btn:hover::after {
-            opacity: 1;
-            transform: scale(1.5);
-        }
-
-        /* ===== SECCIÓN PREGUNTA ===== */
-        .pregunta-section {
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 3rem;
-            padding: 4rem 0;
-        }
-
-        .pregunta-box {
+        /* ===== RETO ===== */
+        .reto-card {
             background: var(--glass);
             backdrop-filter: blur(20px);
             border-radius: 40px;
-            padding: 3rem;
+            padding: 2.5rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 800px;
             text-align: center;
-            box-shadow: var(--shadow);
-            transition: 0.5s;
+            max-width: 700px;
+            margin: 0 auto;
+            transition: all 0.5s ease;
         }
 
-        .pregunta-box:hover {
-            transform: scale(1.01);
+        .reto-card:hover {
             border-color: var(--secondary);
+            transform: scale(1.01);
         }
 
-        .pregunta-box h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #fff, var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .reto-card .emoji-reto {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
         }
 
-        .pregunta-box p {
+        .reto-card h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .reto-card .reto-texto {
             font-size: 1.3rem;
-            font-weight: 300;
-            margin-top: 1.5rem;
             line-height: 1.8;
-            -webkit-text-fill-color: #e2d5f5;
+            opacity: 0.95;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
         }
 
-        /* ===== MURO DE RESPUESTAS ===== */
-        .muro {
+        .reto-card .reto-autor {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            font-style: italic;
+        }
+
+        .btn-reto-nuevo {
+            margin-top: 1.5rem;
+            padding: 0.6rem 2rem;
+            border: 2px solid var(--secondary);
+            border-radius: 60px;
+            background: transparent;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn-reto-nuevo:hover {
+            background: var(--glass);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* ===== VIDEOS ===== */
+        .carrusel-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            width: 100%;
-            margin: 3rem 0;
+            margin-top: 2rem;
         }
 
-        .card {
+        .video-item {
             background: var(--glass);
             backdrop-filter: blur(12px);
             border-radius: 24px;
-            padding: 2rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            perspective: 800px;
-            text-align: center;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s;
         }
 
-        .card:hover {
-            transform: translateY(-20px) rotateY(8deg) rotateX(4deg);
-            border-color: var(--primary);
-            box-shadow: 0 30px 60px rgba(255, 107, 157, 0.2);
+        .video-item:hover {
+            transform: translateY(-8px);
+            border-color: var(--secondary);
         }
 
-        .card .emoji {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 0.5rem;
+        .video-item iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            border: none;
         }
 
-        .card h3 {
-            font-size: 1.2rem;
+        .video-item h4 {
+            margin-top: 1rem;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        /* ===== FORO + MUNDO ===== */
+        .foro-mundo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .foro-mundo {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .foro-box, .mundo-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .foro-box h3, .mundo-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
             color: var(--secondary);
         }
 
-        .card p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            margin-top: 0.8rem;
-        }
-
-        /* ===== FORMULARIO ===== */
-        .form-sororidad {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 3rem;
-            border: 1px solid rgba(255,255,255,0.1);
-            width: 100%;
-            max-width: 600px;
-            margin: 2rem auto;
-        }
-
-        .form-sororidad input, .form-sororidad textarea {
-            width: 100%;
+        .mensaje-foro {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
             padding: 1rem;
-            margin: 0.5rem 0;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .mensaje-foro .nombre {
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .mensaje-foro .fecha {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            margin-left: 0.5rem;
+        }
+
+        .input-foro {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .input-foro input, .input-foro textarea {
+            flex: 1;
+            padding: 0.8rem;
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.2);
             background: rgba(0,0,0,0.3);
             color: #fff;
             font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            transition: 0.3s;
+            font-size: 0.95rem;
+            min-width: 150px;
         }
 
-        .form-sororidad input:focus, .form-sororidad textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 30px rgba(255, 107, 157, 0.2);
-        }
-
-        .form-sororidad button {
-            width: 100%;
-            padding: 1rem;
+        .input-foro button {
+            padding: 0.8rem 1.8rem;
             border: none;
-            border-radius: 60px;
+            border-radius: 30px;
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             color: #fff;
-            font-weight: 800;
-            font-size: 1.2rem;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+        }
+
+        .input-foro button:hover {
+            transform: scale(1.05);
+        }
+
+        .mundo-box .pais {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .mundo-box .pais:last-child {
+            border-bottom: none;
+        }
+
+        .mundo-box .bandera {
+            font-size: 2rem;
+        }
+
+        /* ===== LIBROS ===== */
+        .libros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.8rem;
             margin-top: 1rem;
         }
 
-        .form-sororidad button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 40px var(--secondary);
-        }
-
-        /* ===== VIDEO ===== */
-        .video-wrapper {
+        .libro-card {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.1);
-            max-width: 800px;
-            margin: 4rem auto;
-            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .video-wrapper iframe {
+        .libro-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(255, 107, 157, 0.2);
+        }
+
+        .libro-card .portada-img {
             width: 100%;
-            aspect-ratio: 16 / 9;
+            max-width: 140px;
+            aspect-ratio: 2/3;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            background: linear-gradient(135deg, #2a1a3e, #1a0f2a);
+        }
+
+        .libro-card:hover .portada-img {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .libro-card h4 {
+            color: var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.3;
+            margin-top: 0.3rem;
+        }
+
+        .libro-card .autor {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            color: var(--secondary);
+        }
+
+        .libro-card .frase-libro {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            font-style: italic;
+            margin-top: 0.2rem;
+            line-height: 1.4;
+            max-width: 180px;
+        }
+
+        /* ===== BÉCALAS ===== */
+        .becalas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .testimonio-becala {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
             border-radius: 24px;
-            border: none;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .testimonio-becala .avatar {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonio-becala .nombre-becala {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .testimonio-becala .experiencia {
+            margin-top: 1rem;
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTÓN BÉCALAS ===== */
+        .btn-becalas {
+            color: var(--primary);
+            font-weight: 800;
+            text-decoration: none;
+            border: 2px solid var(--primary);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            transition: all 0.3s;
+            display: inline-block;
+            background: transparent;
+        }
+
+        .btn-becalas:hover {
+            background: var(--primary);
+            color: var(--bg);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 107, 157, 0.3);
         }
 
         /* ===== FOOTER ===== */
-        footer {
+        .footer-inline {
             text-align: center;
-            padding: 3rem 0;
+            padding: 3rem 0 1rem;
             border-top: 1px solid rgba(255,255,255,0.05);
             margin-top: 4rem;
         }
 
         .frase-cambia {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 300;
             font-style: italic;
             color: var(--secondary);
-            min-height: 4rem;
+            min-height: 3rem;
             transition: opacity 0.5s;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 3.5rem; }
-            .pregunta-box h2 { font-size: 1.8rem; }
-            .pregunta-box p { font-size: 1rem; }
-            .cursor, .cursor-follow { display: none; }
-            body { cursor: auto; }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.abierta {
+                transform: translateX(0);
+            }
+            .hamburger {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            .cursor, .cursor-follow {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+            .libros-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.8rem; }
+            .pagina-titulo { font-size: 1.8rem; }
+            .reto-card h3 { font-size: 1.4rem; }
+            .sidebar { width: 100%; max-width: 300px; }
+            .reto-card .reto-texto { font-size: 1.1rem; }
+            .libros-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 0.8rem;
+            }
+            .libro-card .portada-img {
+                max-width: 100px;
+            }
+            .libro-card h4 { font-size: 0.8rem; }
+            .libro-card .autor { font-size: 0.7rem; }
+            .libro-card .frase-libro { font-size: 0.65rem; }
+            .libro-card { padding: 1rem 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    
+    <!-- ===== CURSOR ===== -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-follow" id="cursorFollow"></div>
 
-    
+    <!-- ===== PARTICULAS ===== -->
     <canvas id="particles-canvas"></canvas>
 
-    <div class="container">
+    <!-- ===== BOTÓN HAMBURGUESA ===== -->
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">☰</button>
 
-        
-        <section class="hero">
-            <h1>VOLANDO JUNTAS</h1>
-            <div class="subtitle">✨ Donde la sororidad es nuestro motor ✨</div>
-            <button class="btn" id="btnConfeti">🦋 Despega con nosotras</button>
-        </section>
+    <!-- ===== SIDEBAR ===== -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">
+            🦋 Volando<br><small>JUNTAS</small>
+        </div>
+        <a href="#" data-pagina="inicio" class="activo"><span class="icono">🌱</span> Inicio</a>
+        <a href="#" data-pagina="reto"><span class="icono">🔥</span> Reto del día</a>
+        <a href="#" data-pagina="videos"><span class="icono">🎬</span> Videos</a>
+        <a href="#" data-pagina="foro"><span class="icono">💬</span> Foro + Mundo</a>
+        <a href="#" data-pagina="libros"><span class="icono">📚</span> Libros</a>
+        <a href="#" data-pagina="becalas"><span class="icono">✨</span> BÉCALAS</a>
+    </nav>
 
-        
-        <section class="pregunta-section">
-            <div class="pregunta-box">
-                <h2>¿Qué significa para mí ejercer la sororidad en un mundo competitivo y desigual?</h2>
-                <p>
-                    <strong>Respuesta:</strong> Significa <span style="color: var(--primary);">romper el espejo</span> donde la competencia nos hace enemigas, y construir un <span style="color: var(--accent);">ecosistema de alas</span>. 
-                    Es saber que el éxito de una nos eleva a todas. En un mundo que nos empuja a pisar para subir, la sororidad es el acto radical de <span style="color: var(--secondary);">tender la mano</span>, celebrar los logros ajenos como propios, y recordar que <strong>juntas volamos más alto y más lejos</strong>. 
-                    No es ignorar la desigualdad, sino <span style="color: #fbbf24;">usarla como impulso</span> para crear redes de apoyo que desafíen el sistema.
-                </p>
-            </div>
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <main class="main-content">
 
-            
-            <h2 style="margin-top: 3rem; font-weight: 300;">🌷 Voces que inspiran</h2>
-            <div class="muro" id="muroRespuestas">
-                <div class="card"><span class="emoji">🤝</span><h3>Ana</h3><p>"La sororidad es mi ancla en la tormenta."</p></div>
-                <div class="card"><span class="emoji">🌟</span><h3>María</h3><p>"No compito, comparto. Esa es mi revolución."</p></div>
-                <div class="card"><span class="emoji">💪</span><h3>Laura</h3><p>"La desigualdad se combate con alianzas, no con soledad."</p></div>
-            </div>
-
-            
-            <div class="form-sororidad">
-                <h3 style="margin-bottom: 1rem;">💬 Deja tu huella</h3>
-                <input type="text" id="nombreInput" placeholder="Tu nombre">
-                <textarea id="respuestaInput" rows="3" placeholder="¿Qué significa la sororidad para ti?"></textarea>
-                <button id="btnAgregarRespuesta">Agregar al muro ✨</button>
+        <!-- ===== PÁGINA: INICIO ===== -->
+        <section class="pagina activa" id="pagina-inicio">
+            <div class="hero">
+                <h1>VOLANDO JUNTAS</h1>
+                <div class="subtitle">✨ Donde la sororidad es nuestro motor ✨</div>
+                <button class="btn" id="btnConfeti">🦋 Despega con nosotras</button>
+                <div style="margin-top: 2rem; max-width: 500px; opacity: 0.6; font-size: 0.9rem;">
+                    <p>Explora el menú lateral para descubrir cada sección</p>
+                </div>
             </div>
         </section>
 
-        
-        <section id="video">
-            <div class="video-wrapper">
-                <h2 style="text-align:center; margin-bottom: 1.5rem; font-weight:300;">🎬 Nuestra historia en movimiento</h2>
+        <!-- ===== PÁGINA: RETO ===== -->
+        <section class="pagina" id="pagina-reto">
+            <h2 class="pagina-titulo">🔥 Reto del día</h2>
+            <div class="reto-card" id="retoCard">
+                <span class="emoji-reto" id="retoEmoji">🌟</span>
+                <h3 id="retoTitulo">Acto de sororidad</h3>
+                <div class="reto-texto" id="retoTexto">Carga un reto...</div>
+                <div class="reto-autor" id="retoAutor">✨ Inspiración del día</div>
+                <button class="btn-reto-nuevo" id="btnNuevoReto">🔄 Nuevo reto</button>
+            </div>
+        </section>
+
+        <!-- ===== PÁGINA: VIDEOS ===== -->
+        <section class="pagina" id="pagina-videos">
+            <h2 class="pagina-titulo">🎬 Carrusel de videos</h2>
+            <div class="carrusel-videos">
+                <div class="video-item">
+                    <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video 1" allowfullscreen></iframe>
+                    <h4>🦋 El poder de la sororidad</h4>
+                </div>
+                <div class="video-item">
+                    <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video 2" allowfullscreen></iframe>
+                    <h4>✨ Mujeres que inspiran</h4>
+                </div>
+                <div class="video-item">
+                    <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video 3" allowfullscreen></iframe>
+                    <h4>🌍 Juntas transformamos</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PÁGINA: FORO + MUNDO ===== -->
+        <section class="pagina" id="pagina-foro">
+            <h2 class="pagina-titulo">💬 Foro + Mundo</h2>
+            <div class="foro-mundo">
+                <div class="foro-box">
+                    <h3>🗣️ Foro sororidad</h3>
+                    <div id="muroForo">
+                        <div class="mensaje-foro"><span class="nombre">Ana</span><span class="fecha">· hoy</span><p>“La sororidad es mi ancla en la tormenta.”</p></div>
+                        <div class="mensaje-foro"><span class="nombre">María</span><span class="fecha">· ayer</span><p>“No compito, comparto. Esa es mi revolución.”</p></div>
+                        <div class="mensaje-foro"><span class="nombre">Laura</span><span class="fecha">· hace 2d</span><p>“La desigualdad se combate con alianzas, no con soledad.”</p></div>
+                    </div>
+                    <div class="input-foro">
+                        <input type="text" id="nombreForo" placeholder="Tu nombre" value="Amiga">
+                        <input type="text" id="mensajeForo" placeholder="Escribe tu mensaje...">
+                        <button id="btnForo">💬 Enviar</button>
+                    </div>
+                </div>
+                <div class="mundo-box">
+                    <h3>🌍 Voces del mundo</h3>
+                    <div class="pais"><span class="bandera">🇲🇽</span> <span>“Juntas volamos” — CDMX</span></div>
+                    <div class="pais"><span class="bandera">🇦🇷</span> <span>“Sororidad sin fronteras” — Buenos Aires</span></div>
+                    <div class="pais"><span class="bandera">🇪🇸</span> <span>“La unión es nuestra fuerza” — Madrid</span></div>
+                    <div class="pais"><span class="bandera">🇨🇴</span> <span>“Tejiendo redes” — Bogotá</span></div>
+                    <div class="pais"><span class="bandera">🇺🇾</span> <span>“Resistencia colectiva” — Montevideo</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PÁGINA: LIBROS ===== -->
+        <section class="pagina" id="pagina-libros">
+            <h2 class="pagina-titulo">📚 Libros que inspiran</h2>
+            <div class="libros-grid" id="librosGrid">
+                <!-- Los libros se generan con JavaScript -->
+            </div>
+        </section>
+
+        <!-- ===== PÁGINA: BÉCALAS ===== -->
+      <section class="pagina" id="pagina-becalas">
+    <h2 class="pagina-titulo">✨ BÉCALAS · La experiencia</h2>
+    <p style="max-width: 700px; font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem;">
+        Todo esto lo aprendimos gracias a BÉCALAS. Te invitamos a vivir la experiencia.
+    </p>
     
-                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Video VolandoJuntas" allowfullscreen></iframe>
-                
+    <div class="becalas-grid">
+        <!-- Testimonio de Elena -->
+        <div class="testimonio-becala">
+            <div class="avatar">
+                <img src="imagenes/elena.jpeg" alt="Elena" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
             </div>
-        </section>
+            <div class="nombre-becala">Elena</div>
+            <div class="experiencia">“Ser Becalita ha sido gracias al gran acompañamiento de mi Mentora quien me impulsó a creer y conectar con grandes mujeres como lo demostró BECALAS”</div>
+        </div>
 
-        
-        <footer>
-            <div class="frase-cambia" id="fraseDinamica">"Juntas somos un huracán de luz."</div>
-            <p style="margin-top: 2rem; opacity: 0.4; font-size: 0.8rem;">VolandoJuntas · BECALAS · 2026</p>
-        </footer>
+        <!-- Testimonio de Camila -->
+        <div class="testimonio-becala">
+            <div class="avatar">🌟</div>
+            <div class="nombre-becala">Camila</div>
+            <div class="experiencia">“En BÉCALAS descubrí que la tecnología y la sororidad pueden cambiar el mundo. Cada taller era un despertar.”</div>
+        </div>
 
+        <!-- Testimonio de Sofía -->
+        <div class="testimonio-becala">
+            <div class="avatar">🚀</div>
+            <div class="nombre-becala">Sofía</div>
+            <div class="experiencia">“Las jornadas me regalaron amigas, mentoras y la certeza de que juntas somos imbatibles. ¡Gracias BÉCALAS!”</div>
+        </div>
     </div>
 
+    <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="https://becalos.mx/programas/becalas-mujeres-empoderando-mujeres" target="_blank" class="btn-becalas">🌱 Quiero ser parte</a>
+    </div>
+</section>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer-inline">
+            <div class="frase-cambia" id="fraseDinamica">"Juntas somos un huracán de luz."</div>
+            <p style="margin-top: 1.5rem; opacity: 0.4; font-size: 0.8rem;">VolandoJuntas · BECALAS · 2026</p>
+        </div>
+
+    </main>
+
     <script>
-        
+        // ===== CURSOR =====
         const cursor = document.getElementById('cursor');
         const cursorFollow = document.getElementById('cursorFollow');
 
@@ -425,8 +802,7 @@
             cursorFollow.style.top = e.clientY + 'px';
         });
 
-
-        
+        // ===== PARTÍCULAS =====
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -512,7 +888,232 @@
         }
         animateParticles();
 
-       
+        // ===== SIDEBAR - NAVEGACIÓN SPA =====
+        const sidebar = document.getElementById('sidebar');
+        const hamburger = document.getElementById('hamburgerBtn');
+        const links = document.querySelectorAll('[data-pagina]');
+        const paginas = document.querySelectorAll('.pagina');
+
+        function navegar(paginaId) {
+            paginas.forEach(p => p.classList.remove('activa'));
+            const target = document.getElementById(`pagina-${paginaId}`);
+            if (target) target.classList.add('activa');
+
+            links.forEach(link => link.classList.remove('activo'));
+            const activeLink = document.querySelector(`[data-pagina="${paginaId}"]`);
+            if (activeLink) activeLink.classList.add('activo');
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('abierta');
+            }
+
+            localStorage.setItem('pagina-actual', paginaId);
+
+            if (paginaId === 'reto') {
+                mostrarRetoAleatorio();
+            }
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pagina = link.dataset.pagina;
+                navegar(pagina);
+            });
+        });
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('abierta');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && e.target !== hamburger) {
+                    sidebar.classList.remove('abierta');
+                }
+            }
+        });
+
+        const paginaGuardada = localStorage.getItem('pagina-actual') || 'inicio';
+        navegar(paginaGuardada);
+
+        // ===== RETO ALEATORIO =====
+        const retos = [
+            { emoji: "🌟", titulo: "Acto de sororidad", texto: "Hoy, escribe un mensaje de apoyo a una mujer que admires o que sepa que necesita un impulso. 'Tu luz enciende la mía.'", autor: "Inspiración del día" },
+            { emoji: "💬", titulo: "Escucha activa", texto: "Dedica 10 minutos a escuchar a una mujer sin interrumpir, sin dar consejos, solo escuchando. A veces, el mejor regalo es la atención.", autor: "Sabiduría compartida" },
+            { emoji: "🤝", titulo: "Red de apoyo", texto: "Comparte un recurso útil (libro, podcast, taller) con al menos 3 mujeres de tu círculo. La información compartida es poder multiplicado.", autor: "Comunidad en red" },
+            { emoji: "✨", titulo: "Celebra los logros", texto: "Reconoce en voz alta un logro de una compañera. Hazle saber que su éxito te inspira y que estás orgullosa de ella.", autor: "Celebración colectiva" },
+            { emoji: "📝", titulo: "Carta de gratitud", texto: "Escribe una carta a una mujer que haya marcado tu vida. No tiene que enviarla, solo agradecer en papel el impacto que tuvo.", autor: "Gratitud en movimiento" },
+            { emoji: "🌱", titulo: "Siembra de amor", texto: "Haz un cumplido genuino a una mujer desconocida. Puede ser en la calle, en el transporte o en redes sociales. Pequeños gestos, grandes cambios.", autor: "Amor en acción" },
+            { emoji: "👭", titulo: "Mentoría express", texto: "Ofrece tu conocimiento o experiencia a una mujer que esté empezando en tu área. Compartir lo que sabes es un acto de generosidad radical.", autor: "Sabiduría compartida" },
+            { emoji: "📚", titulo: "Recomienda un libro", texto: "Recomienda un libro escrito por una mujer a alguien de tu entorno. La literatura feminista es un puente hacia la conciencia colectiva.", autor: "Lectura feminista" },
+            { emoji: "🎨", titulo: "Arte de sororidad", texto: "Crea algo artístico (dibujo, poema, canción) que represente la sororidad para ti y compártelo con tu comunidad.", autor: "Creatividad colectiva" },
+            { emoji: "🌍", titulo: "Visibilidad", texto: "Comparte en redes sociales el trabajo o proyecto de una mujer emprendedora. Visibilizar es un acto de apoyo poderoso.", autor: "Aliadas digitales" },
+            { emoji: "💪", titulo: "Afirmación diaria", texto: "Repite en el espejo: 'Soy suficiente, soy valiosa, y celebro a las mujeres que me rodean.' La sororidad empieza por una misma.", autor: "Autoafirmación" },
+            { emoji: "🗣️", titulo: "Conversación valiente", texto: "Inicia una conversación sobre desigualdad de género con alguien de tu entorno. El diálogo es el primer paso para el cambio.", autor: "Valentía feminista" },
+            { emoji: "💜", titulo: "Recordatorio de valor", texto: "Envía un mensaje a una amiga recordándole lo increíble que es y todo lo que ha logrado. A veces olvidamos nuestro propio poder.", autor: "Apoyo mutuo" },
+            { emoji: "🌊", titulo: "Ola de apoyo", texto: "Apoya financieramente un emprendimiento liderado por mujeres. El dinero también es una herramienta de sororidad.", autor: "Economía feminista" },
+            { emoji: "🎯", titulo: "Meta compartida", texto: "Invita a otra mujer a establecer una meta juntas y a apoyarse mutuamente para cumplirla. El éxito compartido sabe mejor.", autor: "Objetivos en equipo" },
+            { emoji: "🕊️", titulo: "Paz interior", texto: "Perdónate a ti misma por algún error del pasado y perdona a otras mujeres que te hayan herido. La sanación colectiva empieza por nosotras.", autor: "Sanación feminista" },
+            { emoji: "💫", titulo: "Brillo propio", texto: "Hoy, celebra tu propio brillo y el de otras mujeres. Reconoce que cada una tiene una luz única que merece ser vista y celebrada.", autor: "Brillo colectivo" },
+            { emoji: "🤗", titulo: "Abrazo virtual", texto: "Envía un abrazo virtual a todas las mujeres que luchan cada día. Un mensaje de apoyo puede cambiar el día de alguien.", autor: "Calidez compartida" },
+            { emoji: "🚀", titulo: "Lanza tu idea", texto: "Comparte una idea o proyecto que tengas con otras mujeres. Juntas pueden potenciarlo y hacerlo realidad.", autor: "Creatividad colectiva" },
+            { emoji: "🌈", titulo: "Diversidad celebrada", texto: "Investiga y comparte información sobre una mujer inspiradora de otra cultura o país. La sororidad no tiene fronteras.", autor: "Mujeres del mundo" }
+        ];
+
+        function mostrarRetoAleatorio() {
+            const reto = retos[Math.floor(Math.random() * retos.length)];
+            document.getElementById('retoEmoji').textContent = reto.emoji;
+            document.getElementById('retoTitulo').textContent = reto.titulo;
+            document.getElementById('retoTexto').textContent = reto.texto;
+            document.getElementById('retoAutor').textContent = `✨ ${reto.autor}`;
+
+            const card = document.getElementById('retoCard');
+            card.style.transform = 'scale(0.95)';
+            card.style.opacity = '0.7';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+                card.style.opacity = '1';
+            }, 200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            mostrarRetoAleatorio();
+        });
+
+        document.getElementById('btnNuevoReto').addEventListener('click', mostrarRetoAleatorio);
+
+        // ===== LIBROS CON PORTADAS REALES =====
+        const libros = [
+            { 
+                titulo: "Casas Vacías", 
+                autor: "Brenda Navarro", 
+                frase: '"Hay vacíos que no se llenan, se habitan"',
+                portada: "https://m.media-amazon.com/images/I/71n7tX4JwmL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "El Invencible verano de Liliana", 
+                autor: "Cristina Rivera Garza", 
+                frase: '"Escribir para que el olvido no gane la última palabra."',
+                portada: "https://m.media-amazon.com/images/I/71ZQGbALsEL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Kim Ji-young, nacida en 1982", 
+                autor: "Cho Nam-Joo", 
+                frase: '"Su historia no tiene nada de extraordinario, y eso es lo que más duele."',
+                portada: "https://m.media-amazon.com/images/I/71kvjW4YODL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Una educación", 
+                autor: "Tara Westover", 
+                frase: '"Aprender a pensar fue su primer acto de desobediencia."',
+                portada: "https://m.media-amazon.com/images/I/71gVUuKKjdL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "El acontecimiento", 
+                autor: "Annie Ernaux", 
+                frase: '"El cuerpo recuerda lo que el silencio intentó borrar."',
+                portada: "https://m.media-amazon.com/images/I/71wWIsmKGxL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Lo que no tiene nombre", 
+                autor: "Piedad Bonnett", 
+                frase: '"Hay dolores que solo se sostienen si se les pone palabras."',
+                portada: "https://m.media-amazon.com/images/I/81GzY4bQqCL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Economía de la vida", 
+                autor: "Alicia Girón", 
+                frase: '"Sostener el mundo también es trabajo, aunque nadie lo pague."',
+                portada: "https://m.media-amazon.com/images/I/61tAJoSS6EL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Las mujeres de la NASA", 
+                autor: "Nathalia Holt", 
+                frase: '"Calcularon el camino a las estrellas sin que nadie las viera hacerlo."',
+                portada: "https://m.media-amazon.com/images/I/81lZIAVpSoL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Las indignas", 
+                autor: "Agustina Bazterrica", 
+                frase: '"La obediencia también es una forma de encierro."',
+                portada: "https://m.media-amazon.com/images/I/71sgtpw6vKL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Manual para mujeres de la limpieza", 
+                autor: "Lucia Berlin", 
+                frase: '"En lo cotidiano también cabe la belleza más cruda."',
+                portada: "https://m.media-amazon.com/images/I/81YbMlL0ziL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "El cuento de la criada", 
+                autor: "Margaret Atwood", 
+                frase: '"Cuando le quitan el nombre a una mujer, empieza la resistencia."',
+                portada: "https://m.media-amazon.com/images/I/81iP-ZGQl4L._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "El síndrome de la impostora", 
+                autor: "Elisabeth Cadoche / Anne de Montarlot", 
+                frase: '"No es que no merezcas el lugar; es que nadie te enseñó a creerlo."',
+                portada: "https://m.media-amazon.com/images/I/81bU2pQunZL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "La revuelta de las putas", 
+                autor: "Amelia Tiganus", 
+                frase: '"El cuerpo propio no se negocia, se defiende."',
+                portada: "https://m.media-amazon.com/images/I/71eWfR5zRFL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Lessico famigliare / Eso fue lo que pasó", 
+                autor: "Natalia Ginzburg", 
+                frase: '"Las familias también se cuentan por lo que decidieron callar."',
+                portada: "https://m.media-amazon.com/images/I/71pO4eam8sL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Lo que el cuerpo nos cuenta", 
+                autor: "Marga Sánchez", 
+                frase: '"El cuerpo habla incluso cuando la boca aprendió a callar."',
+                portada: "https://m.media-amazon.com/images/I/71Nv2Z1MFXL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Mujeres y poder", 
+                autor: "Mary Beard", 
+                frase: '"Hace tres mil años que le enseñan a callar a las mujeres; hace tres mil años que se niegan."',
+                portada: "https://m.media-amazon.com/images/I/71ZzYbNSjqL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Género, raza y sexualidad", 
+                autor: "Ochy Curiel", 
+                frase: '"No hay una sola forma de ser mujer, ni una sola forma de ser oprimida."',
+                portada: "https://m.media-amazon.com/images/I/71b8V-P3JEL._AC_UF1000,1000_QL80_.jpg"
+            },
+            { 
+                titulo: "Adriana o del amor verdadero", 
+                autor: "Marina Closs", 
+                frase: '"El deseo también tiene derecho a ser raro, propio, sin pedir disculpas."',
+                portada: "https://m.media-amazon.com/images/I/71vSQl4FCjL._AC_UF1000,1000_QL80_.jpg"
+            }
+        ];
+
+        function renderizarLibros() {
+            const grid = document.getElementById('librosGrid');
+            grid.innerHTML = '';
+            libros.forEach((libro) => {
+                const card = document.createElement('div');
+                card.className = 'libro-card';
+                card.innerHTML = `
+                    <img src="${libro.portada}" alt="${libro.titulo}" class="portada-img" loading="lazy" onerror="this.style.display='none'">
+                    <h4>“${libro.titulo}”</h4>
+                    <div class="autor">${libro.autor}</div>
+                    <div class="frase-libro">${libro.frase}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        renderizarLibros();
+
+        // ===== CONFETI =====
         document.getElementById('btnConfeti').addEventListener('click', function() {
             for (let i = 0; i < 100; i++) {
                 const confeti = document.createElement('div');
@@ -535,56 +1136,33 @@
             }
         });
 
-        
-        const muro = document.getElementById('muroRespuestas');
-        const nombreInput = document.getElementById('nombreInput');
-        const respuestaInput = document.getElementById('respuestaInput');
-        const btnAgregar = document.getElementById('btnAgregarRespuesta');
+        // ===== FORO =====
+        const muroForo = document.getElementById('muroForo');
+        const nombreForo = document.getElementById('nombreForo');
+        const mensajeForo = document.getElementById('mensajeForo');
+        const btnForo = document.getElementById('btnForo');
 
-        function cargarRespuestas() {
-            const guardadas = JSON.parse(localStorage.getItem('respuestasSororidad')) || [];
-            guardadas.forEach(item => {
-                agregarCard(item.nombre, item.respuesta, false);
-            });
+        function agregarMensaje(nombre, mensaje) {
+            const div = document.createElement('div');
+            div.className = 'mensaje-foro';
+            const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+            div.innerHTML = `<span class="nombre">${nombre}</span><span class="fecha">· ${fecha}</span><p>“${mensaje}”</p>`;
+            muroForo.prepend(div);
         }
 
-        function agregarCard(nombre, respuesta, guardar = true) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <span class="emoji">🦋</span>
-                <h3>${nombre}</h3>
-                <p>"${respuesta}"</p>
-            `;
-            muro.appendChild(card);
-
-            if (guardar) {
-                const guardadas = JSON.parse(localStorage.getItem('respuestasSororidad')) || [];
-                guardadas.push({ nombre, respuesta });
-                localStorage.setItem('respuestasSororidad', JSON.stringify(guardadas));
-            }
-        }
-
-        btnAgregar.addEventListener('click', () => {
-            const nombre = nombreInput.value.trim() || 'Anónima';
-            const respuesta = respuestaInput.value.trim();
-            if (respuesta === '') {
-                alert('Escribe algo bonito ✨');
-                return;
-            }
-            agregarCard(nombre, respuesta, true);
-            nombreInput.value = '';
-            respuestaInput.value = '';
-        
-            document.querySelector('.form-sororidad').style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                document.querySelector('.form-sororidad').style.transform = 'scale(1)';
-            }, 150);
+        btnForo.addEventListener('click', () => {
+            const nombre = nombreForo.value.trim() || 'Anónima';
+            const mensaje = mensajeForo.value.trim();
+            if (!mensaje) return alert('Escribe un mensaje bonito 💜');
+            agregarMensaje(nombre, mensaje);
+            mensajeForo.value = '';
         });
 
-        cargarRespuestas();
+        mensajeForo.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') btnForo.click();
+        });
 
-      
+        // ===== FRASE DINÁMICA =====
         const frases = [
             "Juntas somos un huracán de luz.",
             "La sororidad es el único camino hacia la libertad.",
@@ -603,26 +1181,7 @@
             }, 300);
         }, 4000);
 
-        
-        
-        const cards = document.querySelectorAll('.card, .pregunta-box, .video-wrapper');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.2 });
-
-        cards.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(40px)';
-            el.style.transition = 'all 0.8s cubic-bezier(0.2, 0.9, 0.3, 1)';
-            observer.observe(el);
-        });
-
-        console.log('🦋 VolandoJuntas · Hecho con mucho amor y código 💜');
+        console.log('🦋 VolandoJuntas · 18 libros con portadas reales · Hecho con mucho amor 💜');
     </script>
 </body>
 </html>
