@@ -8,12 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- 🔥 SOLO SUPABASE (YA NO FIREBASE) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        /* ===== RESET Y VARIABLES ===== */
+        /* ===== TODO TU CSS AQUÍ (sin cambios) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -41,7 +40,6 @@
             min-height: 100vh;
         }
 
-        /* ===== CURSOR ===== */
         .cursor {
             width: 20px;
             height: 20px;
@@ -67,7 +65,6 @@
             backdrop-filter: blur(2px);
         }
 
-        /* ===== PARTICULAS ===== */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -78,7 +75,6 @@
             pointer-events: none;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -149,7 +145,6 @@
             text-align: center;
         }
 
-        /* ===== BOTÓN HAMBURGUESA (mobile) ===== */
         .hamburger {
             display: none;
             position: fixed;
@@ -171,7 +166,6 @@
             background: var(--glass);
         }
 
-        /* ===== CONTENIDO PRINCIPAL ===== */
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -181,7 +175,6 @@
             min-height: 100vh;
         }
 
-        /* ===== PÁGINAS ===== */
         .pagina {
             display: none;
             animation: fadeSlide 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -207,7 +200,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ===== HERO ===== */
         .hero {
             min-height: 70vh;
             display: flex;
@@ -260,7 +252,6 @@
             box-shadow: 0 0 60px rgba(255, 107, 157, 0.6);
         }
 
-        /* ===== RETO ===== */
         .reto-card {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -327,7 +318,6 @@
             transform: scale(1.05);
         }
 
-        /* ===== VIDEOS ===== */
         .carrusel-videos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -349,11 +339,12 @@
             border-color: var(--secondary);
         }
 
-        .video-item iframe {
+        .video-item video {
             width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 16px;
             border: none;
+            background: #000;
         }
 
         .video-item h4 {
@@ -362,7 +353,6 @@
             font-size: 1.1rem;
         }
 
-        /* ===== FORO + MUNDO ===== */
         .foro-mundo {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -431,7 +421,7 @@
             flex-wrap: wrap;
         }
 
-        .input-foro input, .input-foro textarea {
+        .input-foro input {
             flex: 1;
             padding: 0.8rem;
             border-radius: 16px;
@@ -479,7 +469,6 @@
             font-size: 2rem;
         }
 
-        /* ===== LIBROS ===== */
         .libros-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -545,7 +534,6 @@
             max-width: 180px;
         }
 
-        /* ===== BÉCALAS ===== */
         .becalas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -587,7 +575,6 @@
             font-size: 0.95rem;
         }
 
-        /* ===== BOTÓN BÉCALAS ===== */
         .btn-becalas {
             color: var(--primary);
             font-weight: 800;
@@ -607,7 +594,6 @@
             box-shadow: 0 0 40px rgba(255, 107, 157, 0.3);
         }
 
-        /* ===== FOOTER ===== */
         .footer-inline {
             text-align: center;
             padding: 3rem 0 1rem;
@@ -624,7 +610,6 @@
             transition: opacity 0.5s;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -728,7 +713,6 @@
                     <video src="volandojuntas.mp4" title="Video 1" controls></video>
                     <h4>🦋 Has sentido que.....?</h4>
                 </div>
-            
             </div>
         </section>
 
@@ -739,7 +723,6 @@
                 <div class="foro-box">
                     <h3>🗣️ Foro sororidad</h3>
                     <div id="muroForo">
-                        <!-- Los mensajes se cargan desde Firebase -->
                         <div style="text-align: center; opacity: 0.5; padding: 2rem;" id="cargandoMensajes">
                             Cargando mensajes... 💜
                         </div>
@@ -764,16 +747,14 @@
         <!-- ===== PÁGINA: LIBROS ===== -->
         <section class="pagina" id="pagina-libros">
             <h2 class="pagina-titulo">📚 Alas de Tinta</h2>
-            <div class="libros-grid" id="librosGrid">
-                <!-- Los libros se generan con JavaScript -->
-            </div>
+            <div class="libros-grid" id="librosGrid"></div>
         </section>
 
         <!-- ===== PÁGINA: BÉCALAS ===== -->
         <section class="pagina" id="pagina-becalas">
             <h2 class="pagina-titulo">✨ BÉCALAS </h2>
             <p style="max-width: 700px; font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem;">
-                Con BécALAS aprendimos que florecer es más fácil cuando lo hacemos juntas.
+                Con BÉCALAS aprendimos que florecer es más fácil cuando lo hacemos juntas.
             </p>
             
             <div class="becalas-grid">
@@ -787,7 +768,7 @@
 
                 <div class="testimonio-becala">
                      <div class="avatar">
-                        <img src="imagenes/ivanna.jpeg" alt="Elena">
+                        <img src="imagenes/ivanna.jpeg" alt="Ivanna">
                     </div>
                     <div class="nombre-becala">Ivanna</div>
                     <div class="experiencia">“Bécalas me enseñó que cuando confías en tu talento, el impacto se multiplica en tu entorno. Hoy no solo soy testimonio de lo que este programa logra, sino una profesional comprometida a seguir abriendo camino para las siguientes generaciones.”</div>
@@ -798,7 +779,7 @@
                         <img src="imagenes/alaisa.jpeg" alt="Alaisa">
                     </div>
                     <div class="nombre-becala">Alaisa</div>
-                    <div class="experiencia">“BecaLAS llegó en un momento clave de mi vida y se convirtió en una herramienta fundamental para concluir mi último semestre de universidad.Gracias a BecALAS cambié mis miedos en alas para seguir persiguiendo mis sueños.”</div>
+                    <div class="experiencia">“BecaLAS llegó en un momento clave de mi vida y se convirtió en una herramienta fundamental para concluir mi último semestre de universidad. Gracias a BECALAS cambié mis miedos en alas para seguir persiguiendo mis sueños.”</div>
                 </div>
             </div>
 
@@ -817,88 +798,90 @@
 
     <script>
         // =====================================================
-        //  CONFIGURACIÓN DE FIREBASE
-        //  ¡CAMBIAR ESTOS DATOS POR LOS TUYOS!
+        //  FORO CON SUPABASE
         // =====================================================
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
-        };
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // 🔥 PON AQUÍ TUS CREDENCIALES DE SUPABASE 🔥
+        const SUPABASE_URL = "https://aeifprgazvgeccsoskab.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_QWjbU2wYTBnIIN1egcl1sw_R44QF7Gx";
 
-        // =====================================================
-        //  FUNCIONES DEL FORO CON FIREBASE
-        // =====================================================
+        // Inicializar Supabase
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const muroForo = document.getElementById('muroForo');
         const nombreForo = document.getElementById('nombreForo');
         const mensajeForo = document.getElementById('mensajeForo');
         const btnForo = document.getElementById('btnForo');
         const cargandoMsg = document.getElementById('cargandoMensajes');
 
-        // Escuchar mensajes en tiempo real
-        function escucharMensajes() {
-            db.collection('mensajes')
-                .orderBy('timestamp', 'desc')
-                .limit(50)
-                .onSnapshot((snapshot) => {
-                    // Ocultar mensaje de carga
-                    if (cargandoMsg) cargandoMsg.style.display = 'none';
+        // ===== CARGAR MENSAJES =====
+        async function cargarMensajes() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('mensajes')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
+                if (error) {
+                    console.error('Error de Supabase:', error);
+                    throw error;
+                }
+                
+                if (cargandoMsg) cargandoMsg.style.display = 'none';
+                
+                const mensajesExistentes = muroForo.querySelectorAll('.mensaje-foro');
+                mensajesExistentes.forEach(el => el.remove());
+
+                if (!data || data.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.style.textAlign = 'center';
+                    emptyMsg.style.opacity = '0.5';
+                    emptyMsg.style.padding = '2rem';
+                    emptyMsg.textContent = '✨ Sé la primera en dejar un mensaje ✨';
+                    muroForo.prepend(emptyMsg);
+                    return;
+                }
+
+                data.forEach((msg) => {
+                    const div = document.createElement('div');
+                    div.className = 'mensaje-foro';
+                    div.dataset.id = msg.id;
                     
-                    // Limpiar el muro (excepto el mensaje de carga)
-                    const mensajesExistentes = muroForo.querySelectorAll('.mensaje-foro');
-                    mensajesExistentes.forEach(el => el.remove());
-
-                    if (snapshot.empty) {
-                        const emptyMsg = document.createElement('div');
-                        emptyMsg.style.textAlign = 'center';
-                        emptyMsg.style.opacity = '0.5';
-                        emptyMsg.style.padding = '2rem';
-                        emptyMsg.textContent = '✨ Sé la primera en dejar un mensaje ✨';
-                        muroForo.prepend(emptyMsg);
-                        return;
-                    }
-
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const div = document.createElement('div');
-                        div.className = 'mensaje-foro';
-                        div.dataset.id = doc.id;
-                        
-                        const fecha = data.timestamp 
-                            ? new Date(data.timestamp.seconds * 1000).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-                            : 'reciente';
-                        
-                        div.innerHTML = `
-                            <span class="nombre">${data.nombre || 'Anónima'}</span>
-                            <span class="fecha">· ${fecha}</span>
-                            <button class="borrar-btn" onclick="borrarMensaje('${doc.id}')">✕</button>
-                            <p>“${data.mensaje}”</p>
-                        `;
-                        muroForo.prepend(div);
-                    });
-                }, (error) => {
-                    console.error('Error al escuchar mensajes:', error);
-                    if (cargandoMsg) {
-                        cargandoMsg.textContent = '❌ Error al cargar mensajes. Intenta recargar.';
-                        cargandoMsg.style.color = 'var(--primary)';
-                    }
+                    const fecha = msg.created_at 
+                        ? new Date(msg.created_at).toLocaleString('es-ES', { 
+                            day: 'numeric', 
+                            month: 'short', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        })
+                        : 'reciente';
+                    
+                    div.innerHTML = `
+                        <span class="nombre">${msg.nombre || 'Anónima'}</span>
+                        <span class="fecha">· ${fecha}</span>
+                        <button class="borrar-btn" onclick="borrarMensaje('${msg.id}')">✕</button>
+                        <p>“${msg.mensaje}”</p>
+                    `;
+                    muroForo.prepend(div);
                 });
+            } catch (error) {
+                console.error('Error al cargar mensajes:', error);
+                if (cargandoMsg) {
+                    cargandoMsg.textContent = '❌ Error al cargar. Verifica tu conexión.';
+                    cargandoMsg.style.color = 'var(--primary)';
+                }
+            }
         }
 
-        // Enviar mensaje a Firebase
+        // ===== ENVIAR MENSAJE =====
         async function enviarMensaje() {
             const nombre = nombreForo.value.trim() || 'Anónima';
             const mensaje = mensajeForo.value.trim();
             
             if (!mensaje) {
-                alert('Escribe un mensaje bonito 💜');
+                alert('✍️ Escribe un mensaje bonito 💜');
                 return;
             }
 
@@ -906,43 +889,69 @@
             btnForo.textContent = '⏳ Enviando...';
 
             try {
-                await db.collection('mensajes').add({
-                    nombre: nombre,
-                    mensaje: mensaje,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                const { error } = await supabaseClient
+                    .from('mensajes')
+                    .insert([{ nombre: nombre, mensaje: mensaje }]);
+                
+                if (error) throw error;
                 
                 mensajeForo.value = '';
+                await cargarMensajes();
+                
                 btnForo.disabled = false;
                 btnForo.textContent = '💬 Enviar';
             } catch (error) {
                 console.error('Error al enviar:', error);
-                alert('❌ Error al enviar el mensaje. Intenta de nuevo.');
+                alert('❌ Error al enviar. Revisa la consola (F12).');
                 btnForo.disabled = false;
                 btnForo.textContent = '💬 Enviar';
             }
         }
 
-        // Borrar mensaje (solo para demo, normalmente necesitas autenticación)
+        // ===== BORRAR MENSAJE =====
         async function borrarMensaje(id) {
             if (!confirm('¿Segura que quieres eliminar este mensaje?')) return;
             
             try {
-                await db.collection('mensajes').doc(id).delete();
+                const { error } = await supabaseClient
+                    .from('mensajes')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                await cargarMensajes();
             } catch (error) {
                 console.error('Error al borrar:', error);
                 alert('❌ No se pudo eliminar el mensaje.');
             }
         }
 
-        // Eventos del foro
+        // ===== ESCUCHAR CAMBIOS EN TIEMPO REAL =====
+        function escucharMensajesTiempoReal() {
+            try {
+                supabaseClient
+                    .channel('mensajes-channel')
+                    .on('postgres_changes', 
+                        { event: '*', schema: 'public', table: 'mensajes' }, 
+                        () => cargarMensajes()
+                    )
+                    .subscribe();
+                
+                console.log('📡 Escuchando cambios en tiempo real...');
+            } catch (error) {
+                console.error('Error al suscribirse:', error);
+            }
+        }
+
+        // ===== EVENTOS DEL FORO =====
         btnForo.addEventListener('click', enviarMensaje);
         mensajeForo.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') enviarMensaje();
         });
 
-        // Iniciar escucha de mensajes
-        escucharMensajes();
+        // ===== INICIAR =====
+        cargarMensajes();
+        escucharMensajesTiempoReal();
 
         // =====================================================
         //  RESTO DEL CÓDIGO (CURSOR, PARTÍCULAS, ETC.)
@@ -1142,114 +1151,24 @@
 
         // ===== LIBROS =====
         const libros = [
-            { 
-                titulo: "Casas Vacías", 
-                autor: "Brenda Navarro", 
-                frase: '"Hay vacíos que no se llenan, se habitan"',
-                portada: "https://m.media-amazon.com/images/I/71n7tX4JwmL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "El Invencible verano de Liliana", 
-                autor: "Cristina Rivera Garza", 
-                frase: '"Escribir para que el olvido no gane la última palabra."',
-                portada: "https://m.media-amazon.com/images/I/71ZQGbALsEL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Kim Ji-young, nacida en 1982", 
-                autor: "Cho Nam-Joo", 
-                frase: '"Su historia no tiene nada de extraordinario, y eso es lo que más duele."',
-                portada: "https://m.media-amazon.com/images/I/71kvjW4YODL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Una educación", 
-                autor: "Tara Westover", 
-                frase: '"Aprender a pensar fue su primer acto de desobediencia."',
-                portada: "https://m.media-amazon.com/images/I/71gVUuKKjdL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "El acontecimiento", 
-                autor: "Annie Ernaux", 
-                frase: '"El cuerpo recuerda lo que el silencio intentó borrar."',
-                portada: "https://m.media-amazon.com/images/I/71wWIsmKGxL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Lo que no tiene nombre", 
-                autor: "Piedad Bonnett", 
-                frase: '"Hay dolores que solo se sostienen si se les pone palabras."',
-                portada: "https://m.media-amazon.com/images/I/81GzY4bQqCL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Economía de la vida", 
-                autor: "Alicia Girón", 
-                frase: '"Sostener el mundo también es trabajo, aunque nadie lo pague."',
-                portada: "https://m.media-amazon.com/images/I/61tAJoSS6EL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Las mujeres de la NASA", 
-                autor: "Nathalia Holt", 
-                frase: '"Calcularon el camino a las estrellas sin que nadie las viera hacerlo."',
-                portada: "https://m.media-amazon.com/images/I/81lZIAVpSoL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Las indignas", 
-                autor: "Agustina Bazterrica", 
-                frase: '"La obediencia también es una forma de encierro."',
-                portada: "https://m.media-amazon.com/images/I/71sgtpw6vKL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Manual para mujeres de la limpieza", 
-                autor: "Lucia Berlin", 
-                frase: '"En lo cotidiano también cabe la belleza más cruda."',
-                portada: "https://m.media-amazon.com/images/I/81YbMlL0ziL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "El cuento de la criada", 
-                autor: "Margaret Atwood", 
-                frase: '"Cuando le quitan el nombre a una mujer, empieza la resistencia."',
-                portada: "https://m.media-amazon.com/images/I/81iP-ZGQl4L._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "El síndrome de la impostora", 
-                autor: "Elisabeth Cadoche / Anne de Montarlot", 
-                frase: '"No es que no merezcas el lugar; es que nadie te enseñó a creerlo."',
-                portada: "https://m.media-amazon.com/images/I/81bU2pQunZL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "La revuelta de las putas", 
-                autor: "Amelia Tiganus", 
-                frase: '"El cuerpo propio no se negocia, se defiende."',
-                portada: "https://m.media-amazon.com/images/I/71eWfR5zRFL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Lessico famigliare / Eso fue lo que pasó", 
-                autor: "Natalia Ginzburg", 
-                frase: '"Las familias también se cuentan por lo que decidieron callar."',
-                portada: "https://m.media-amazon.com/images/I/71pO4eam8sL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Lo que el cuerpo nos cuenta", 
-                autor: "Marga Sánchez", 
-                frase: '"El cuerpo habla incluso cuando la boca aprendió a callar."',
-                portada: "https://m.media-amazon.com/images/I/71Nv2Z1MFXL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Mujeres y poder", 
-                autor: "Mary Beard", 
-                frase: '"Hace tres mil años que le enseñan a callar a las mujeres; hace tres mil años que se niegan."',
-                portada: "https://m.media-amazon.com/images/I/71ZzYbNSjqL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Género, raza y sexualidad", 
-                autor: "Ochy Curiel", 
-                frase: '"No hay una sola forma de ser mujer, ni una sola forma de ser oprimida."',
-                portada: "https://m.media-amazon.com/images/I/71b8V-P3JEL._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                titulo: "Adriana o del amor verdadero", 
-                autor: "Marina Closs", 
-                frase: '"El deseo también tiene derecho a ser raro, propio, sin pedir disculpas."',
-                portada: "https://m.media-amazon.com/images/I/71vSQl4FCjL._AC_UF1000,1000_QL80_.jpg"
-            }
+            { titulo: "Casas Vacías", autor: "Brenda Navarro", frase: '"Hay vacíos que no se llenan, se habitan"', portada: "https://m.media-amazon.com/images/I/71n7tX4JwmL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "El Invencible verano de Liliana", autor: "Cristina Rivera Garza", frase: '"Escribir para que el olvido no gane la última palabra."', portada: "https://m.media-amazon.com/images/I/71ZQGbALsEL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Kim Ji-young, nacida en 1982", autor: "Cho Nam-Joo", frase: '"Su historia no tiene nada de extraordinario, y eso es lo que más duele."', portada: "https://m.media-amazon.com/images/I/71kvjW4YODL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Una educación", autor: "Tara Westover", frase: '"Aprender a pensar fue su primer acto de desobediencia."', portada: "https://m.media-amazon.com/images/I/71gVUuKKjdL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "El acontecimiento", autor: "Annie Ernaux", frase: '"El cuerpo recuerda lo que el silencio intentó borrar."', portada: "https://m.media-amazon.com/images/I/71wWIsmKGxL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Lo que no tiene nombre", autor: "Piedad Bonnett", frase: '"Hay dolores que solo se sostienen si se les pone palabras."', portada: "https://m.media-amazon.com/images/I/81GzY4bQqCL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Economía de la vida", autor: "Alicia Girón", frase: '"Sostener el mundo también es trabajo, aunque nadie lo pague."', portada: "https://m.media-amazon.com/images/I/61tAJoSS6EL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Las mujeres de la NASA", autor: "Nathalia Holt", frase: '"Calcularon el camino a las estrellas sin que nadie las viera hacerlo."', portada: "https://m.media-amazon.com/images/I/81lZIAVpSoL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Las indignas", autor: "Agustina Bazterrica", frase: '"La obediencia también es una forma de encierro."', portada: "https://m.media-amazon.com/images/I/71sgtpw6vKL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Manual para mujeres de la limpieza", autor: "Lucia Berlin", frase: '"En lo cotidiano también cabe la belleza más cruda."', portada: "https://m.media-amazon.com/images/I/81YbMlL0ziL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "El cuento de la criada", autor: "Margaret Atwood", frase: '"Cuando le quitan el nombre a una mujer, empieza la resistencia."', portada: "https://m.media-amazon.com/images/I/81iP-ZGQl4L._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "El síndrome de la impostora", autor: "Elisabeth Cadoche / Anne de Montarlot", frase: '"No es que no merezcas el lugar; es que nadie te enseñó a creerlo."', portada: "https://m.media-amazon.com/images/I/81bU2pQunZL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "La revuelta de las putas", autor: "Amelia Tiganus", frase: '"El cuerpo propio no se negocia, se defiende."', portada: "https://m.media-amazon.com/images/I/71eWfR5zRFL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Lessico famigliare / Eso fue lo que pasó", autor: "Natalia Ginzburg", frase: '"Las familias también se cuentan por lo que decidieron callar."', portada: "https://m.media-amazon.com/images/I/71pO4eam8sL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Lo que el cuerpo nos cuenta", autor: "Marga Sánchez", frase: '"El cuerpo habla incluso cuando la boca aprendió a callar."', portada: "https://m.media-amazon.com/images/I/71Nv2Z1MFXL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Mujeres y poder", autor: "Mary Beard", frase: '"Hace tres mil años que le enseñan a callar a las mujeres; hace tres mil años que se niegan."', portada: "https://m.media-amazon.com/images/I/71ZzYbNSjqL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Género, raza y sexualidad", autor: "Ochy Curiel", frase: '"No hay una sola forma de ser mujer, ni una sola forma de ser oprimida."', portada: "https://m.media-amazon.com/images/I/71b8V-P3JEL._AC_UF1000,1000_QL80_.jpg" },
+            { titulo: "Adriana o del amor verdadero", autor: "Marina Closs", frase: '"El deseo también tiene derecho a ser raro, propio, sin pedir disculpas."', portada: "https://m.media-amazon.com/images/I/71vSQl4FCjL._AC_UF1000,1000_QL80_.jpg" }
         ];
 
         function renderizarLibros() {
@@ -1312,7 +1231,7 @@
             }, 300);
         }, 4000);
 
-        console.log('🦋 VolandoJuntas · Foro conectado a Firebase · Hecho con mucho amor 💜');
+        console.log('🦋 VolandoJuntas · Foro conectado a Supabase · Hecho con mucho amor 💜');
     </script>
 </body>
 </html>
