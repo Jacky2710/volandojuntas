@@ -7,6 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <style>
         /* ===== RESET Y VARIABLES ===== */
         * {
@@ -202,7 +207,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ===== HERO (página inicio) ===== */
+        /* ===== HERO ===== */
         .hero {
             min-height: 70vh;
             display: flex;
@@ -390,6 +395,7 @@
             padding: 1rem;
             margin-bottom: 1rem;
             border-left: 4px solid var(--primary);
+            animation: fadeSlide 0.3s ease;
         }
 
         .mensaje-foro .nombre {
@@ -401,6 +407,21 @@
             font-size: 0.7rem;
             opacity: 0.5;
             margin-left: 0.5rem;
+        }
+
+        .mensaje-foro .borrar-btn {
+            float: right;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.3);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            padding: 0 0.5rem;
+        }
+
+        .mensaje-foro .borrar-btn:hover {
+            color: var(--primary);
         }
 
         .input-foro {
@@ -435,6 +456,11 @@
 
         .input-foro button:hover {
             transform: scale(1.05);
+        }
+
+        .input-foro button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .mundo-box .pais {
@@ -541,6 +567,14 @@
             margin-bottom: 0.5rem;
         }
 
+        .testimonio-becala .avatar img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
         .testimonio-becala .nombre-becala {
             color: var(--accent);
             font-weight: 800;
@@ -631,10 +665,6 @@
             .libro-card .portada-img {
                 max-width: 100px;
             }
-            .libro-card h4 { font-size: 0.8rem; }
-            .libro-card .autor { font-size: 0.7rem; }
-            .libro-card .frase-libro { font-size: 0.65rem; }
-            .libro-card { padding: 1rem 0.8rem; }
         }
     </style>
 </head>
@@ -716,9 +746,10 @@
                 <div class="foro-box">
                     <h3>🗣️ Foro sororidad</h3>
                     <div id="muroForo">
-                        <div class="mensaje-foro"><span class="nombre">Ana</span><span class="fecha">· hoy</span><p>“La sororidad es mi ancla en la tormenta.”</p></div>
-                        <div class="mensaje-foro"><span class="nombre">María</span><span class="fecha">· ayer</span><p>“No compito, comparto. Esa es mi revolución.”</p></div>
-                        <div class="mensaje-foro"><span class="nombre">Laura</span><span class="fecha">· hace 2d</span><p>“La desigualdad se combate con alianzas, no con soledad.”</p></div>
+                        <!-- Los mensajes se cargan desde Firebase -->
+                        <div style="text-align: center; opacity: 0.5; padding: 2rem;" id="cargandoMensajes">
+                            Cargando mensajes... 💜
+                        </div>
                     </div>
                     <div class="input-foro">
                         <input type="text" id="nombreForo" placeholder="Tu nombre" value="Amiga">
@@ -746,41 +777,40 @@
         </section>
 
         <!-- ===== PÁGINA: BÉCALAS ===== -->
-      <section class="pagina" id="pagina-becalas">
-    <h2 class="pagina-titulo">✨ BÉCALAS · La experiencia</h2>
-    <p style="max-width: 700px; font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem;">
-        Todo esto lo aprendimos gracias a BÉCALAS. Te invitamos a vivir la experiencia.
-    </p>
-    
-    <div class="becalas-grid">
-        <!-- Testimonio de Elena -->
-        <div class="testimonio-becala">
-            <div class="avatar">
-                <img src="imagenes/elena.jpeg" alt="Elena" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+        <section class="pagina" id="pagina-becalas">
+            <h2 class="pagina-titulo">✨ BÉCALAS · La experiencia</h2>
+            <p style="max-width: 700px; font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem;">
+                Todo esto lo aprendimos gracias a BÉCALAS. Te invitamos a vivir la experiencia.
+            </p>
+            
+            <div class="becalas-grid">
+                <div class="testimonio-becala">
+                    <div class="avatar">
+                        <img src="imagenes/elena.jpeg" alt="Elena">
+                    </div>
+                    <div class="nombre-becala">Elena</div>
+                    <div class="experiencia">“Ser Becalita ha sido gracias al gran acompañamiento de mi Mentora quien me impulsó a creer y conectar con grandes mujeres como lo demostró BECALAS”</div>
+                </div>
+
+                <div class="testimonio-becala">
+                     <div class="avatar">
+                        <img src="imagenes/ivanna.jpeg" alt="Elena">
+                    </div>
+                    <div class="nombre-becala">Ivanna</div>
+                    <div class="experiencia">“Bécalas me enseñó que cuando confías en tu talento, el impacto se multiplica en tu entorno. Hoy no solo soy testimonio de lo que este programa logra, sino una profesional comprometida a seguir abriendo camino para las siguientes generaciones.”</div>
+                </div>
+
+                <div class="testimonio-becala">
+                    <div class="avatar">🚀</div>
+                    <div class="nombre-becala">Sofía</div>
+                    <div class="experiencia">“Las jornadas me regalaron amigas, mentoras y la certeza de que juntas somos imbatibles. ¡Gracias BÉCALAS!”</div>
+                </div>
             </div>
-            <div class="nombre-becala">Elena</div>
-            <div class="experiencia">“Ser Becalita ha sido gracias al gran acompañamiento de mi Mentora quien me impulsó a creer y conectar con grandes mujeres como lo demostró BECALAS”</div>
-        </div>
 
-        <!-- Testimonio de Camila -->
-        <div class="testimonio-becala">
-            <div class="avatar">🌟</div>
-            <div class="nombre-becala">Camila</div>
-            <div class="experiencia">“En BÉCALAS descubrí que la tecnología y la sororidad pueden cambiar el mundo. Cada taller era un despertar.”</div>
-        </div>
-
-        <!-- Testimonio de Sofía -->
-        <div class="testimonio-becala">
-            <div class="avatar">🚀</div>
-            <div class="nombre-becala">Sofía</div>
-            <div class="experiencia">“Las jornadas me regalaron amigas, mentoras y la certeza de que juntas somos imbatibles. ¡Gracias BÉCALAS!”</div>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 2.5rem;">
-        <a href="https://becalos.mx/programas/becalas-mujeres-empoderando-mujeres" target="_blank" class="btn-becalas">🌱 Quiero ser parte</a>
-    </div>
-</section>
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a href="https://becalos.mx/programas/becalas-mujeres-empoderando-mujeres" target="_blank" class="btn-becalas">🌱 Quiero ser parte</a>
+            </div>
+        </section>
 
         <!-- ===== FOOTER ===== -->
         <div class="footer-inline">
@@ -791,6 +821,138 @@
     </main>
 
     <script>
+        // =====================================================
+        //  CONFIGURACIÓN DE FIREBASE
+        //  ¡CAMBIAR ESTOS DATOS POR LOS TUYOS!
+        // =====================================================
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // =====================================================
+        //  FUNCIONES DEL FORO CON FIREBASE
+        // =====================================================
+        const muroForo = document.getElementById('muroForo');
+        const nombreForo = document.getElementById('nombreForo');
+        const mensajeForo = document.getElementById('mensajeForo');
+        const btnForo = document.getElementById('btnForo');
+        const cargandoMsg = document.getElementById('cargandoMensajes');
+
+        // Escuchar mensajes en tiempo real
+        function escucharMensajes() {
+            db.collection('mensajes')
+                .orderBy('timestamp', 'desc')
+                .limit(50)
+                .onSnapshot((snapshot) => {
+                    // Ocultar mensaje de carga
+                    if (cargandoMsg) cargandoMsg.style.display = 'none';
+                    
+                    // Limpiar el muro (excepto el mensaje de carga)
+                    const mensajesExistentes = muroForo.querySelectorAll('.mensaje-foro');
+                    mensajesExistentes.forEach(el => el.remove());
+
+                    if (snapshot.empty) {
+                        const emptyMsg = document.createElement('div');
+                        emptyMsg.style.textAlign = 'center';
+                        emptyMsg.style.opacity = '0.5';
+                        emptyMsg.style.padding = '2rem';
+                        emptyMsg.textContent = '✨ Sé la primera en dejar un mensaje ✨';
+                        muroForo.prepend(emptyMsg);
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const div = document.createElement('div');
+                        div.className = 'mensaje-foro';
+                        div.dataset.id = doc.id;
+                        
+                        const fecha = data.timestamp 
+                            ? new Date(data.timestamp.seconds * 1000).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+                            : 'reciente';
+                        
+                        div.innerHTML = `
+                            <span class="nombre">${data.nombre || 'Anónima'}</span>
+                            <span class="fecha">· ${fecha}</span>
+                            <button class="borrar-btn" onclick="borrarMensaje('${doc.id}')">✕</button>
+                            <p>“${data.mensaje}”</p>
+                        `;
+                        muroForo.prepend(div);
+                    });
+                }, (error) => {
+                    console.error('Error al escuchar mensajes:', error);
+                    if (cargandoMsg) {
+                        cargandoMsg.textContent = '❌ Error al cargar mensajes. Intenta recargar.';
+                        cargandoMsg.style.color = 'var(--primary)';
+                    }
+                });
+        }
+
+        // Enviar mensaje a Firebase
+        async function enviarMensaje() {
+            const nombre = nombreForo.value.trim() || 'Anónima';
+            const mensaje = mensajeForo.value.trim();
+            
+            if (!mensaje) {
+                alert('Escribe un mensaje bonito 💜');
+                return;
+            }
+
+            btnForo.disabled = true;
+            btnForo.textContent = '⏳ Enviando...';
+
+            try {
+                await db.collection('mensajes').add({
+                    nombre: nombre,
+                    mensaje: mensaje,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                mensajeForo.value = '';
+                btnForo.disabled = false;
+                btnForo.textContent = '💬 Enviar';
+            } catch (error) {
+                console.error('Error al enviar:', error);
+                alert('❌ Error al enviar el mensaje. Intenta de nuevo.');
+                btnForo.disabled = false;
+                btnForo.textContent = '💬 Enviar';
+            }
+        }
+
+        // Borrar mensaje (solo para demo, normalmente necesitas autenticación)
+        async function borrarMensaje(id) {
+            if (!confirm('¿Segura que quieres eliminar este mensaje?')) return;
+            
+            try {
+                await db.collection('mensajes').doc(id).delete();
+            } catch (error) {
+                console.error('Error al borrar:', error);
+                alert('❌ No se pudo eliminar el mensaje.');
+            }
+        }
+
+        // Eventos del foro
+        btnForo.addEventListener('click', enviarMensaje);
+        mensajeForo.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enviarMensaje();
+        });
+
+        // Iniciar escucha de mensajes
+        escucharMensajes();
+
+        // =====================================================
+        //  RESTO DEL CÓDIGO (CURSOR, PARTÍCULAS, ETC.)
+        // =====================================================
+
         // ===== CURSOR =====
         const cursor = document.getElementById('cursor');
         const cursorFollow = document.getElementById('cursorFollow');
@@ -888,7 +1050,7 @@
         }
         animateParticles();
 
-        // ===== SIDEBAR - NAVEGACIÓN SPA =====
+        // ===== SIDEBAR =====
         const sidebar = document.getElementById('sidebar');
         const hamburger = document.getElementById('hamburgerBtn');
         const links = document.querySelectorAll('[data-pagina]');
@@ -983,7 +1145,7 @@
 
         document.getElementById('btnNuevoReto').addEventListener('click', mostrarRetoAleatorio);
 
-        // ===== LIBROS CON PORTADAS REALES =====
+        // ===== LIBROS =====
         const libros = [
             { 
                 titulo: "Casas Vacías", 
@@ -1136,32 +1298,6 @@
             }
         });
 
-        // ===== FORO =====
-        const muroForo = document.getElementById('muroForo');
-        const nombreForo = document.getElementById('nombreForo');
-        const mensajeForo = document.getElementById('mensajeForo');
-        const btnForo = document.getElementById('btnForo');
-
-        function agregarMensaje(nombre, mensaje) {
-            const div = document.createElement('div');
-            div.className = 'mensaje-foro';
-            const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-            div.innerHTML = `<span class="nombre">${nombre}</span><span class="fecha">· ${fecha}</span><p>“${mensaje}”</p>`;
-            muroForo.prepend(div);
-        }
-
-        btnForo.addEventListener('click', () => {
-            const nombre = nombreForo.value.trim() || 'Anónima';
-            const mensaje = mensajeForo.value.trim();
-            if (!mensaje) return alert('Escribe un mensaje bonito 💜');
-            agregarMensaje(nombre, mensaje);
-            mensajeForo.value = '';
-        });
-
-        mensajeForo.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') btnForo.click();
-        });
-
         // ===== FRASE DINÁMICA =====
         const frases = [
             "Juntas somos un huracán de luz.",
@@ -1181,7 +1317,7 @@
             }, 300);
         }, 4000);
 
-        console.log('🦋 VolandoJuntas · 18 libros con portadas reales · Hecho con mucho amor 💜');
+        console.log('🦋 VolandoJuntas · Foro conectado a Firebase · Hecho con mucho amor 💜');
     </script>
 </body>
 </html>
